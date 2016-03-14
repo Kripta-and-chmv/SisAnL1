@@ -19,9 +19,9 @@ namespace SisAn
             InitializeComponent();
         }
 
-        float[] C = new float[8];
-        string[] el = {"0", "1", "0,5", "_"};
-        private string[] alterntaiv = new string[] {}; //= new string[] {
+        
+        string[] el = {"0", "1", "0.5", "_"};
+        //private string[] alterntaiv = new string[] {}; //= new string[] {
         //    "[1]Замена всего медицинского оборудования, отработавшего нормативный срок, на новое.",
         //    "[2]Открытие дневных стационаров при поликлиниках.",
         //    "[3]Создание единой электронной справочной медицинских заведений города.",
@@ -81,33 +81,41 @@ namespace SisAn
 
         private void button1_Click(object sender, EventArgs e)
         {
+            int count = lstbxAltList.Items.Count;
+            float[] C = new float[count];
+            string[] sortedList = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                sortedList[i] = lstbxAltList.Items[i].ToString();
+            }
             if (!check())
             {
                 return;
             }
             float R = 0;
-            for (int i = 0; i < lstbxAltList.Items.Count; i++)
+            for (int i = 0; i < count; i++)
                 C[i] = 0;
 
-            for (int i = 0; i < dtgrdwMatrix.Rows.Count; i++)
+            for (int i = 0; i < count; i++)
             {
-                for (int j = 0; j < dtgrdwMatrix.Columns.Count; j++)
+                for (int j = 0; j < count; j++)
                 {
                     if (j != i)
                     {
                         C[i] += Convert.ToSingle(dtgrdwMatrix[j, i].Value);
-                        R += Convert.ToSingle(dtgrdwMatrix[j, i].Value);
+                        //R += Convert.ToSingle(dtgrdwMatrix[j, i].Value);
                     }
                 }
-                C[i] = C[i]/R;
+                
             }
-            BubbleSort(C);
+            //for(int i = 0; i<count; i++)
+               // C[i] = C[i] / R;
+            BubbleSort(C, sortedList);
             lstbxAltList.Items.Clear();
-            for (int i = 0; i < C.Length; i++)
-                lstbxAltList.Items.Add(alterntaiv[i]);
+            lstbxAltList.Items.AddRange(sortedList);
         } //сам алгоритм
 
-        void BubbleSort(float[] A)
+        void BubbleSort(float[] A, string[] sortedList)
         {
             for (int i = 0; i < A.Length - 1; i++)
             {
@@ -118,9 +126,9 @@ namespace SisAn
                         var temp = A[i];
                         A[i] = A[j];
                         A[j] = temp;
-                        var tmp = alterntaiv[i];
-                        alterntaiv[i] = alterntaiv[j];
-                        alterntaiv[j] = tmp;
+                        var tmp = sortedList[i];
+                        sortedList[i] = sortedList[j];
+                        sortedList[j] = tmp;
                     }
                 }
             }
@@ -148,8 +156,6 @@ namespace SisAn
 
                 }
             }
-            for (var i = 0; i < lstbxAltList.Items.Count; i++)
-                C[i] = 0;
 
         }
 
@@ -186,8 +192,8 @@ namespace SisAn
                         if ((!el.Contains(dtgrdwMatrix[i, j].Value)))
                         {
                             MessageBox.Show("Неверно задана матрица предпочтений!");
-                            dtgrdwMatrix[i, j].Value = "0";
-                            dtgrdwMatrix[j, i].Value = "1";
+                            dtgrdwMatrix[i, j].Value = "1";
+                            dtgrdwMatrix[j, i].Value = "0";
                             return false;
                         }
                         else
