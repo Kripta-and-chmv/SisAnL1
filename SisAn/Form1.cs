@@ -30,7 +30,7 @@ namespace SisAn
         //    "[6]Строительство поликлиник в густонаселенных микрорайонах.",
         //    "[7]Строительство наркологического центра.",
         //    "[8]Увеличение парка машин скорой помощи."};//это вот тоже надо убрать, тк у нас из файла будет в лист бокс альтернативы попадать
-        string[] alt = new string[8];
+        //string[] alt = new string[8];
         bool flag = false;
 
         private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -210,14 +210,13 @@ namespace SisAn
         private void Add_altern_Click(object sender, EventArgs e) //добавить альтернативу
 
         {
-            int alt = lstbxAltList.Items.Count;
             if (txtbxAddAlt.Text != "")
             {
-                lstbxAltList.Items.Add(txtbxAddAlt.Text);
+                lstbxAltList.Items.Add("["+(lstbxAltList.Items.Count+1).ToString()+"] "+txtbxAddAlt.Text);
                 txtbxAddAlt.Text = "";
-                dtgrdwMatrix.Columns.Add("z" + alt.ToString(), "z" + alt.ToString());
+                dtgrdwMatrix.Columns.Add("z" + lstbxAltList.Items.Count.ToString(), "z" + lstbxAltList.Items.Count.ToString());
                 dtgrdwMatrix.Rows.Add();
-                dtgrdwMatrix.Rows[alt].HeaderCell.Value = "z" + alt.ToString();
+                dtgrdwMatrix.Rows[lstbxAltList.Items.Count-1].HeaderCell.Value = "z" + lstbxAltList.Items.Count.ToString();
                 for (int i = 0; i < dtgrdwMatrix.Rows.Count; ++i)
                 {
                     int j = dtgrdwMatrix.Rows.Count - 1;
@@ -228,8 +227,8 @@ namespace SisAn
                     }
                     else
                     {
-                        dtgrdwMatrix[i, j].Value = "0";
-                        dtgrdwMatrix[j, i].Value = "1";
+                        dtgrdwMatrix[j, i].Value = "0";
+                        dtgrdwMatrix[i, j].Value = "1";
                     }
 
                 }
@@ -239,15 +238,15 @@ namespace SisAn
 
         private void Del_altern_Click(object sender, EventArgs e) //удаление выбранных альтернатив
         {
-            if (lstbxAltList.Items.Count != 0)
+            if ((lstbxAltList.Items.Count != 0)&&(lstbxAltList.SelectedIndex!=-1))
             {
                 dtgrdwMatrix.Rows.RemoveAt(lstbxAltList.SelectedIndex);
                 dtgrdwMatrix.Columns.RemoveAt(lstbxAltList.SelectedIndex);
                 lstbxAltList.Items.RemoveAt(lstbxAltList.SelectedIndex);
                 for (int i = 0; i < lstbxAltList.Items.Count; i++)
                 {
-                    dtgrdwMatrix.Rows[i].HeaderCell.Value = "z" + i.ToString();
-                    dtgrdwMatrix.Columns[i].HeaderText = "z" + i.ToString();
+                    dtgrdwMatrix.Rows[i].HeaderCell.Value = "z" + (i+1).ToString();
+                    dtgrdwMatrix.Columns[i].HeaderText = "z" + (i+1).ToString();
                 }
             }
         }
@@ -312,42 +311,34 @@ namespace SisAn
                 dtgrdwMatrix.Rows.Clear();
                 for (int i = 0; i < alts.Length; i++)
                 {
-                    dtgrdwMatrix.Columns.Add("z"+i.ToString(), "z" + i.ToString());
+                    dtgrdwMatrix.Columns.Add("z"+(i+1).ToString(), "z" + (i + 1).ToString());
                 }
                 
                 dtgrdwMatrix.Rows.Add(alts.Length);
 
                 for (int j = 0; j < alts.Length; j++)
                 {
+                    dtgrdwMatrix.Rows[j].HeaderCell.Value = "z" + (j + 1).ToString();
                     for (int i = 0; i < alts.Length; i++)
                     {
                         if (j == i)
                         {
-                            dtgrdwMatrix[j, i].Value = "-";
-                        }
-                        if (j < i)
-                        {
-                            dtgrdwMatrix[j, i].Value = "1";
+                            dtgrdwMatrix[i, i].Style.BackColor = Color.Aqua;
+                            dtgrdwMatrix[j, i].ReadOnly = true;
                         }
                         else
                         {
                             dtgrdwMatrix[j, i].Value = "0";
-                        }
-                        if (j == i)
-                        {
-                            dtgrdwMatrix[j, i].Value = "-";
+                            dtgrdwMatrix[i, j].Value = "1";
                         }
                     }
                 }
                 lstbxAltList.Text=String.Empty;
-               
-                for(int i=1; i<=alts.Length; i++)
+                for (int i = 1; i <= alts.Length; i++)
                 {
-                    alts[i-1] = "[" + i.ToString() + "] " + alts[i-1];
+                    alts[i - 1] = "[" + i.ToString() + "] " + alts[i - 1];
                 }
                 lstbxAltList.Items.AddRange(alts);
-                
-                
                 altFile.Close();
             }
         }
