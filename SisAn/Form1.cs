@@ -27,10 +27,10 @@ namespace SisAn
             "[5]Покупка и установка дорогостоящего современного оборудования в специализированных центрах и диспансерах.",
             "[6]Строительство поликлиник в густонаселенных микрорайонах.",
             "[7]Строительство наркологического центра.",
-            "[8]Увеличение парка машин скорой помощи."};
+            "[8]Увеличение парка машин скорой помощи."};//это вот тоже надо убрать, тк у нас из файла будет в лист бокс альтернативы попадать
         string[] alt = new string[8];
         bool flag = false;
-        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)// проверь работает ли с любыми матрицами
         {
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -60,7 +60,7 @@ namespace SisAn
         private void Form1_Load(object sender, EventArgs e)
         {
             dataGridView1.AllowUserToAddRows = false; //запрешаем пользователю самому добавлять строки
-            for (int i = 0; i < 8; ++i)
+           /* for (int i = 0; i < 8; ++i)
             {
                 //Добавляем строку, указывая значения колонок поочереди слева направо
                 dataGridView1.Rows.Add("");
@@ -72,7 +72,7 @@ namespace SisAn
                 dataGridView1[i, i].ReadOnly = true;
             }
             Array.Copy(alterntaiv, alt, 8);
-            flag = true;
+            flag = true;*/
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -82,7 +82,7 @@ namespace SisAn
                 return;
             }
             float R = 0;
-            for (int i = 0; i < listBox1.Items.Count; i++)
+            for (int i = 0; i < list_Alt.Items.Count; i++)
                 C[i] = 0;
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
@@ -98,10 +98,10 @@ namespace SisAn
                 C[i] = C[i] / R;
             }
             BubbleSort(C);
-            listBox1.Items.Clear();
+            list_Alt.Items.Clear();
             for (int i = 0; i < C.Length; i++)
-                listBox1.Items.Add(alterntaiv[i]);
-        }
+                list_Alt.Items.Add(alterntaiv[i]);
+        }//сам алгоритм
         void BubbleSort(float[] A)
         {
             for (int i = 0; i < A.Length - 1; i++)
@@ -121,27 +121,144 @@ namespace SisAn
             }
         }
 
-        private void очиститьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void очиститьToolStripMenuItem_Click(object sender, EventArgs e)//очистка матрицы
         {
             for (int i = 0; i < dataGridView1.Rows.Count; ++i)
             {
 
                 for (int j = 0; j < dataGridView1.Columns.Count; ++j)
                 {
-                    dataGridView1[i, i].Style.BackColor = Color.Aqua;
-                    dataGridView1[i, i].ReadOnly = true;
-                    dataGridView1[j, i].Style.BackColor = Color.White;
-                    dataGridView1[j, i].Value = "";
+
+                    if (i!=j)
+                    {
+                        dataGridView1[j, i].Style.BackColor = Color.White;
+                        dataGridView1[i, j].Value = "1";
+                        dataGridView1[j, i].Value = "0";
+                    }
+                    else
+                    {
+                        dataGridView1[i, i].Style.BackColor = Color.Aqua;
+                        dataGridView1[i, i].ReadOnly = true;
+                    }
+                    
                 }
             }
-            for (var i = 0; i < listBox1.Items.Count; i++)
+            for (var i = 0; i < list_Alt.Items.Count; i++)
                 C[i] = 0;
-            listBox1.Items.Clear();
-            for (var i = 0; i < C.Length; i++)
-                listBox1.Items.Add(alt[i]);
+            
         }
 
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)//это не надо, в самом низу то что нужно
+        {
+            /*if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string Out = string.Empty;
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                    {
+                        if (i == j)
+                            Out += "_\t";
+                        else
+                            Out += dataGridView1[j, i].Value + "\t";
+                    }
+                    Out += "\n";
+                }
+                File.WriteAllText(saveFileDialog1.FileName, Out);
+            }*/
+
+        }
+        bool check()
+        {
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                {
+                    if (i != j)
+                        if ((!el.Contains(dataGridView1[i, j].Value)))
+                        {
+                            MessageBox.Show("Неверно задана матрица предпочтений!");
+                            dataGridView1[i, j].Value = "0";
+                            dataGridView1[j, i].Value = "1";
+                            return false;
+                        }
+                        else
+                        {
+                            if (Convert.ToSingle(dataGridView1[i, j].Value) + Convert.ToSingle(dataGridView1[j, i].Value) != 1)
+                            {
+                                MessageBox.Show("Неверно задана матрица предпочтений!");
+                                dataGridView1[i, j].Style.BackColor = dataGridView1[j, i].Style.BackColor = Color.Red;
+                                return false;
+                            }
+                        }
+                }
+
+
+            }
+            return true;
+        }
+
+        private void Add_altern_Click(object sender, EventArgs e)//добавить альтернативу
+
+        {
+            int alt = list_Alt.Items.Count; 
+            if (add_alt.Text != "")
+            {
+                list_Alt.Items.Add(add_alt.Text);
+                add_alt.Text = "";
+                dataGridView1.Columns.Add("z" + alt.ToString(), "z" + alt.ToString());
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[alt].HeaderCell.Value = "z" + alt.ToString();
+                for (int i = 0; i < dataGridView1.Rows.Count; ++i)
+                {
+                    int j = dataGridView1.Rows.Count - 1;
+                        if (i == j)
+                        {
+                            dataGridView1[i, i].Style.BackColor = Color.Aqua;
+                            dataGridView1[i, i].ReadOnly = true;
+                        }
+                        else
+                        {
+                            dataGridView1[i, j].Value = "0";
+                            dataGridView1[j, i].Value = "1";
+                        }
+
+                }
+            }
+
+        }
+        private void Del_altern_Click(object sender, EventArgs e)//удаление выбранных альтернатив
+        {
+            if (list_Alt.Items.Count != 0)
+            {
+                dataGridView1.Rows.RemoveAt(list_Alt.SelectedIndex);
+                dataGridView1.Columns.RemoveAt(list_Alt.SelectedIndex);
+                list_Alt.Items.RemoveAt(list_Alt.SelectedIndex);
+                for (int i = 0; i < list_Alt.Items.Count; i++)
+                {
+                    dataGridView1.Rows[i].HeaderCell.Value = "z" + i.ToString();
+                    dataGridView1.Columns[i].HeaderText = "z" + i.ToString();
+                }
+            }
+        }
+
+        private void Del_All_Click(object sender, EventArgs e)//очистить все
+        {
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            list_Alt.Items.Clear();
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)//автоподстановка
+        {
+            
+            dataGridView1[e.RowIndex, e.ColumnIndex].Value = 
+               (1 - Convert.ToSingle(dataGridView1[e.ColumnIndex, e.RowIndex].Value)).ToString();
+            check();
+        }
+
+        private void матрицаПредпочтенийToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -159,36 +276,20 @@ namespace SisAn
                 }
                 File.WriteAllText(saveFileDialog1.FileName, Out);
             }
-
         }
-        bool check()
+
+        private void списокАльтернативToolStripMenuItem_Click(object sender, EventArgs e)//сохранение в файл
         {
-
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                string Out = string.Empty;
+                for (int i = 0; i < list_Alt.Items.Count; i++)
                 {
-                    if (i != j)
-                        if (i != j && (!el.Contains(dataGridView1[i, j].Value)))
-                        {
-                            MessageBox.Show("Неверно задана матрица предпочтений!");
-                            dataGridView1[i, j].Style.BackColor = Color.Red;
-                            return false;
-                        }
-                        else
-                        {
-                            if (Convert.ToSingle(dataGridView1[i, j].Value) + Convert.ToSingle(dataGridView1[j, i].Value) != 1)
-                            {
-                                MessageBox.Show("Неверно задана матрица предпочтений!");
-                                dataGridView1[i, j].Style.BackColor = dataGridView1[j, i].Style.BackColor = Color.Red;
-                                return false;
-                            }
-                        }
+                    
+                   
                 }
-
-
+                File.WriteAllText(saveFileDialog1.FileName, Out);
             }
-            return true;
         }
 
 
