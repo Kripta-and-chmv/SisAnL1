@@ -218,14 +218,15 @@ namespace SisAn
         {
             if ((lstbxAltList.Items.Count != 0)&&(lstbxAltList.SelectedIndex!=-1))
             {
-                dtgrdwMatrix.Rows.RemoveAt(lstbxAltList.SelectedIndex);
-                dtgrdwMatrix.Columns.RemoveAt(lstbxAltList.SelectedIndex);
+                int k= Convert.ToInt16(lstbxAltList.SelectedItem.ToString()[1]) - '0';
+                dtgrdwMatrix.Rows.RemoveAt(k-1);
+                dtgrdwMatrix.Columns.RemoveAt(k-1);
                 lstbxAltList.Items.RemoveAt(lstbxAltList.SelectedIndex);
-                for (int i = 0; i < lstbxAltList.Items.Count; i++)
-                {
-                    dtgrdwMatrix.Rows[i].HeaderCell.Value = "z" + (i+1).ToString();
-                    dtgrdwMatrix.Columns[i].HeaderText = "z" + (i+1).ToString();
-                }
+                //for (int i = 0; i < lstbxAltList.Items.Count; i++)
+                //{
+                //    dtgrdwMatrix.Rows[i].HeaderCell.Value = "z" + (i+1).ToString();
+                //    dtgrdwMatrix.Columns[i].HeaderText = "z" + (i+1).ToString();
+                //}
             }
         }
 
@@ -326,23 +327,37 @@ namespace SisAn
             {
                 string[] str = File.ReadAllLines(openFileDialog1.FileName, Encoding.Default);
                 int pos = 0;
+                dtgrdwMatrix.Rows.Clear();
+                string[] c = new string[str.Length];
+                for (int i = 0; i < c.Length; i++)
+                    c[i] = "[" + (i+1).ToString() + "] ";
+
+                for (int i = 0; i < str.Length; i++)
+                {
+                    dtgrdwMatrix.Columns.Add("z" + (i + 1).ToString(), "z" + (i + 1).ToString());
+                }
+
+                dtgrdwMatrix.Rows.Add(str.Length);
+
                 for (int i = 0; i < dtgrdwMatrix.RowCount; i++)
                 {
                     string[] buf = str[i].Split('\t');
                     for (int j = 0; j < dtgrdwMatrix.ColumnCount; j++)
                     {
-                        if (str[pos] == "")
-                            pos++;
-                        dtgrdwMatrix[j, i].Value = str[pos];
+                        //if (str[pos] == "")
+                        //    pos++;
+                        dtgrdwMatrix[j, i].Value = buf[j];
                         pos++;
                         if (i == j)
                         {
-                            dtgrdwMatrix[i, i].Value = ' ';
+                            dtgrdwMatrix[i, i].Value = "";
                             dtgrdwMatrix[i, i].ReadOnly = true;
                             dtgrdwMatrix[i, i].Style.BackColor = Color.Aqua;
                         }
                     }
                 }
+                lstbxAltList.Items.Clear();
+                lstbxAltList.Items.AddRange(c);
             }
         }
 
