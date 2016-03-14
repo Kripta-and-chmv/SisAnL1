@@ -21,34 +21,13 @@ namespace SisAn
 
         
         string[] el = {"0", "1", "0.5", "_"};
-        //private string[] alterntaiv = new string[] {}; //= new string[] {
-        //    "[1]Замена всего медицинского оборудования, отработавшего нормативный срок, на новое.",
-        //    "[2]Открытие дневных стационаров при поликлиниках.",
-        //    "[3]Создание единой электронной справочной медицинских заведений города.",
-        //    "[4]Строительство специализированных медицинских центров.",
-        //    "[5]Покупка и установка дорогостоящего современного оборудования в специализированных центрах и диспансерах.",
-        //    "[6]Строительство поликлиник в густонаселенных микрорайонах.",
-        //    "[7]Строительство наркологического центра.",
-        //    "[8]Увеличение парка машин скорой помощи."};//это вот тоже надо убрать, тк у нас из файла будет в лист бокс альтернативы попадать
-        //string[] alt = new string[8];
-        bool flag = false;
+        
+        bool load = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
             dtgrdwMatrix.AllowUserToAddRows = false; //запрешаем пользователю самому добавлять строки
-            /* for (int i = 0; i < 8; ++i)
-            {
-                //Добавляем строку, указывая значения колонок поочереди слева направо
-                dataGridView1.Rows.Add("");
-                dataGridView1.Rows[i].HeaderCell.Value = "z" + (i + 1).ToString();
-            }
-            for (int i = 0; i < dataGridView1.Rows.Count; ++i)
-            {
-                dataGridView1[i, i].Style.BackColor = Color.Aqua;
-                dataGridView1[i, i].ReadOnly = true;
-            }
-            Array.Copy(alterntaiv, alt, 8);
-            flag = true;*/
+           
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -75,13 +54,13 @@ namespace SisAn
                     if (j != i)
                     {
                         C[i] += Convert.ToSingle(dtgrdwMatrix[j, i].Value);
-                        //R += Convert.ToSingle(dtgrdwMatrix[j, i].Value);
+                        R += Convert.ToSingle(dtgrdwMatrix[j, i].Value);
                     }
                 }
                 
             }
-            //for(int i = 0; i<count; i++)
-               // C[i] = C[i] / R;
+            for(int i = 0; i<count; i++)
+                C[i] = C[i] / R;
             BubbleSort(C, sortedList);
             lstbxAltList.Items.Clear();
             lstbxAltList.Items.AddRange(sortedList);
@@ -134,23 +113,7 @@ namespace SisAn
         private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
             //это не надо, в самом низу то что нужно
         {
-            /*if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string Out = string.Empty;
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    for (int j = 0; j < dataGridView1.Columns.Count; j++)
-                    {
-                        if (i == j)
-                            Out += "_\t";
-                        else
-                            Out += dataGridView1[j, i].Value + "\t";
-                    }
-                    Out += "\n";
-                }
-                File.WriteAllText(saveFileDialog1.FileName, Out);
-            }*/
-
+           
         }
 
         bool check()
@@ -240,9 +203,10 @@ namespace SisAn
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e) //автоподстановка
         {
 
+             
             dtgrdwMatrix[e.RowIndex, e.ColumnIndex].Value =
                 (1 - Convert.ToSingle(dtgrdwMatrix[e.ColumnIndex, e.RowIndex].Value)).ToString();
-            check();
+           check();
         }
 
         private void матрицаПредпочтенийToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -297,24 +261,27 @@ namespace SisAn
                 }
                 
                 dtgrdwMatrix.Rows.Add(alts.Length);
-
-                for (int j = 0; j < alts.Length; j++)
+                if (!load)
                 {
-                    dtgrdwMatrix.Rows[j].HeaderCell.Value = "z" + (j + 1).ToString();
-                    for (int i = 0; i < alts.Length; i++)
+                    for (int j = 0; j < alts.Length; j++)
                     {
-                        if (j == i)
+                        dtgrdwMatrix.Rows[j].HeaderCell.Value = "z" + (j + 1).ToString();
+                        for (int i = 0; i < alts.Length; i++)
                         {
-                            dtgrdwMatrix[i, i].Style.BackColor = Color.Aqua;
-                            dtgrdwMatrix[j, i].ReadOnly = true;
-                        }
-                        else
-                        {
-                            dtgrdwMatrix[j, i].Value = "0";
-                            dtgrdwMatrix[i, j].Value = "1";
+                            if (j == i)
+                            {
+                                dtgrdwMatrix[i, i].Style.BackColor = Color.Aqua;
+                                dtgrdwMatrix[j, i].ReadOnly = true;
+                            }
+                            else
+                            {
+                                dtgrdwMatrix[j, i].Value = "0";
+                                dtgrdwMatrix[i, j].Value = "1";
+                            }
                         }
                     }
                 }
+                load = true;
                 lstbxAltList.Items.Clear();
                 for (int i = 1; i <= alts.Length; i++)
                 {
@@ -366,8 +333,12 @@ namespace SisAn
                         }
                     }
                 }
-                lstbxAltList.Items.Clear();
-                lstbxAltList.Items.AddRange(c);
+                if (!load)
+                {
+                    lstbxAltList.Items.Clear();
+                    lstbxAltList.Items.AddRange(c);
+                }
+                load = true;
             }
         }
 
