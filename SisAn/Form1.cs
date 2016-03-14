@@ -33,34 +33,6 @@ namespace SisAn
         //string[] alt = new string[8];
         bool flag = false;
 
-        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
-            // проверь работает ли с любыми матрицами
-        {
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                StreamReader sr = new StreamReader(openFileDialog1.FileName);
-                string[] str = sr.ReadToEnd().Split(new Char[] {' ', '\r', '\n', '\t'});
-                int pos = 0;
-                for (int i = 0; i < dtgrdwMatrix.RowCount; i++)
-                {
-                    for (int j = 0; j < dtgrdwMatrix.ColumnCount; j++)
-                    {
-                        if (str[pos] == "")
-                            pos++;
-                        dtgrdwMatrix[j, i].Value = str[pos];
-                        pos++;
-                        if (i == j)
-                        {
-                            dtgrdwMatrix[i, i].Value = ' ';
-                            dtgrdwMatrix[i, i].ReadOnly = true;
-                            dtgrdwMatrix[i, i].Style.BackColor = Color.Aqua;
-                        }
-                    }
-                }
-                sr.Close();
-            }
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             dtgrdwMatrix.AllowUserToAddRows = false; //запрешаем пользователю самому добавлять строки
@@ -310,7 +282,6 @@ namespace SisAn
         {
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                StreamReader altFile = new StreamReader(openFileDialog1.FileName);
                 string[] alts = File.ReadAllLines(openFileDialog1.FileName, Encoding.Default);
 
                 int pos = 0;
@@ -345,8 +316,40 @@ namespace SisAn
                     alts[i - 1] = "[" + i.ToString() + "] " + alts[i - 1];
                 }
                 lstbxAltList.Items.AddRange(alts);
-                altFile.Close();
+               
             }
+        }
+
+        private void матрицаПредпочтенийToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string[] str = File.ReadAllLines(openFileDialog1.FileName, Encoding.Default);
+                int pos = 0;
+                for (int i = 0; i < dtgrdwMatrix.RowCount; i++)
+                {
+                    string[] buf = str[i].Split('\t');
+                    for (int j = 0; j < dtgrdwMatrix.ColumnCount; j++)
+                    {
+                        if (str[pos] == "")
+                            pos++;
+                        dtgrdwMatrix[j, i].Value = str[pos];
+                        pos++;
+                        if (i == j)
+                        {
+                            dtgrdwMatrix[i, i].Value = ' ';
+                            dtgrdwMatrix[i, i].ReadOnly = true;
+                            dtgrdwMatrix[i, i].Style.BackColor = Color.Aqua;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnEditing_Click(object sender, EventArgs e)
+        {
+            lstbxAltList.Items[lstbxAltList.SelectedIndex] = lstbxAltList.SelectedItem.ToString().Substring(0, 4) +txtbxEditing.Text;
+            txtbxEditing.Text = "";
         }
     }
 

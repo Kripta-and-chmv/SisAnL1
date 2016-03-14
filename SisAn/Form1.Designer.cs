@@ -48,6 +48,8 @@
             this.btnAddAlt = new System.Windows.Forms.Button();
             this.btnDelAlt = new System.Windows.Forms.Button();
             this.btnDelAll = new System.Windows.Forms.Button();
+            this.btnEditing = new System.Windows.Forms.Button();
+            this.txtbxEditing = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdwMatrix)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -91,7 +93,6 @@
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
             this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
-            this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
             // 
             // альтернативаToolStripMenuItem
             // 
@@ -105,6 +106,7 @@
             this.матрицаПредпочтенийToolStripMenuItem.Name = "матрицаПредпочтенийToolStripMenuItem";
             this.матрицаПредпочтенийToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.матрицаПредпочтенийToolStripMenuItem.Text = "Матрица предпочтений";
+            this.матрицаПредпочтенийToolStripMenuItem.Click += new System.EventHandler(this.матрицаПредпочтенийToolStripMenuItem_Click);
             // 
             // сохранитьToolStripMenuItem
             // 
@@ -214,11 +216,30 @@
             this.btnDelAll.UseVisualStyleBackColor = true;
             this.btnDelAll.Click += new System.EventHandler(this.Del_All_Click);
             // 
+            // btnEditing
+            // 
+            this.btnEditing.Location = new System.Drawing.Point(625, 365);
+            this.btnEditing.Name = "btnEditing";
+            this.btnEditing.Size = new System.Drawing.Size(100, 23);
+            this.btnEditing.TabIndex = 10;
+            this.btnEditing.Text = "Редактировать";
+            this.btnEditing.UseVisualStyleBackColor = true;
+            this.btnEditing.Click += new System.EventHandler(this.btnEditing_Click);
+            // 
+            // txtbxEditing
+            // 
+            this.txtbxEditing.Location = new System.Drawing.Point(625, 339);
+            this.txtbxEditing.Name = "txtbxEditing";
+            this.txtbxEditing.Size = new System.Drawing.Size(100, 20);
+            this.txtbxEditing.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(844, 536);
+            this.Controls.Add(this.txtbxEditing);
+            this.Controls.Add(this.btnEditing);
             this.Controls.Add(this.btnDelAll);
             this.Controls.Add(this.btnDelAlt);
             this.Controls.Add(this.btnAddAlt);
@@ -263,6 +284,8 @@
         private System.Windows.Forms.Button btnDelAll;
         private System.Windows.Forms.ToolStripMenuItem матрицаПредпочтенийToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem списокАльтернативToolStripMenuItem;
+        private System.Windows.Forms.Button btnEditing;
+        private System.Windows.Forms.TextBox txtbxEditing;
     }
 }
 
