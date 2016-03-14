@@ -284,7 +284,11 @@ namespace SisAn
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string[] alts = File.ReadAllLines(openFileDialog1.FileName, Encoding.Default);
-
+                if ((dtgrdwMatrix.Rows.Count != 0) && (dtgrdwMatrix.Rows.Count != alts.Length))
+                {
+                    MessageBox.Show("Несовпадение по размеру", "Ошибка");
+                    return;
+                }
                 int pos = 0;
                 dtgrdwMatrix.Rows.Clear();
                 for (int i = 0; i < alts.Length; i++)
@@ -311,7 +315,7 @@ namespace SisAn
                         }
                     }
                 }
-                lstbxAltList.Text=String.Empty;
+                lstbxAltList.Items.Clear();
                 for (int i = 1; i <= alts.Length; i++)
                 {
                     alts[i - 1] = "[" + i.ToString() + "] " + alts[i - 1];
@@ -326,8 +330,14 @@ namespace SisAn
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string[] str = File.ReadAllLines(openFileDialog1.FileName, Encoding.Default);
+                if ((dtgrdwMatrix.Rows.Count != 0) && (dtgrdwMatrix.Rows.Count != str.Length))
+                {
+                    MessageBox.Show("Несовпадение по размеру", "Ошибка");
+                    return;
+                }
                 int pos = 0;
                 dtgrdwMatrix.Rows.Clear();
+                dtgrdwMatrix.Columns.Clear();
                 string[] c = new string[str.Length];
                 for (int i = 0; i < c.Length; i++)
                     c[i] = "[" + (i+1).ToString() + "] ";
