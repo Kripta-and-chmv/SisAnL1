@@ -181,15 +181,23 @@ namespace SisAn
         {
             if ((lstbxAltList.Items.Count != 0)&&(lstbxAltList.SelectedIndex!=-1))
             {
-                int k= Convert.ToInt16(lstbxAltList.SelectedItem.ToString()[1]) - '0';
+                int ch = lstbxAltList.SelectedItem.ToString().IndexOf("]");
+                int k = int.Parse(lstbxAltList.SelectedItem.ToString().Substring(1,ch-1));
                 dtgrdwMatrix.Rows.RemoveAt(k-1);
                 dtgrdwMatrix.Columns.RemoveAt(k-1);
                 lstbxAltList.Items.RemoveAt(lstbxAltList.SelectedIndex);
-                //for (int i = 0; i < lstbxAltList.Items.Count; i++)
-                //{
-                //    dtgrdwMatrix.Rows[i].HeaderCell.Value = "z" + (i+1).ToString();
-                //    dtgrdwMatrix.Columns[i].HeaderText = "z" + (i+1).ToString();
-                //}
+                for (int i = 0; i < lstbxAltList.Items.Count; i++)
+                {
+                    dtgrdwMatrix.Rows[i].HeaderCell.Value = "z" + (i+1).ToString();
+                    dtgrdwMatrix.Columns[i].HeaderText = "z" + (i+1).ToString();
+                    int buf = lstbxAltList.Items[i].ToString().IndexOf("]", StringComparison.Ordinal);
+                    int ind = int.Parse(lstbxAltList.Items[i].ToString().Substring(1, buf - 1));
+                    if (ind > k)
+                    {
+                        lstbxAltList.Items[i] = "[" + (ind-1).ToString() + "] " +
+                                                lstbxAltList.Items[i].ToString().Remove(0, buf+2);
+                    }
+                }
             }
         }
 
