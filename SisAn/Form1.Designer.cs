@@ -91,7 +91,7 @@
             this.альтернативаToolStripMenuItem,
             this.матрицаПредпочтенийToolStripMenuItem});
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
             // 
             // альтернативаToolStripMenuItem
@@ -114,7 +114,7 @@
             this.матрицаПредпочтенийToolStripMenuItem1,
             this.списокАльтернативToolStripMenuItem});
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
             // 
@@ -150,6 +150,7 @@
             this.lstbxAltList.Name = "lstbxAltList";
             this.lstbxAltList.Size = new System.Drawing.Size(607, 121);
             this.lstbxAltList.TabIndex = 2;
+            this.lstbxAltList.DoubleClick += new System.EventHandler(this.lstbxAltList_DoubleClick);
             // 
             // btnSort
             // 

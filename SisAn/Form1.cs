@@ -142,8 +142,6 @@ namespace SisAn
                             }
                         }
                 }
-
-
             }
             return true;
         }
@@ -206,12 +204,11 @@ namespace SisAn
             dtgrdwMatrix.Rows.Clear();
             dtgrdwMatrix.Columns.Clear();
             lstbxAltList.Items.Clear();
+            load = false;
         }
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e) //автоподстановка
         {
-
-             
             dtgrdwMatrix[e.RowIndex, e.ColumnIndex].Value =
                 (1 - Convert.ToSingle(dtgrdwMatrix[e.ColumnIndex, e.RowIndex].Value)).ToString();
            check();
@@ -244,14 +241,13 @@ namespace SisAn
                 string Out = string.Empty;
                 for (int i = 0; i < lstbxAltList.Items.Count; i++)
                 {
-
-
+                    Out += lstbxAltList.Items[i].ToString().Substring(4) + "\n";
                 }
-                File.WriteAllText(saveFileDialog1.FileName, Out);
+                File.WriteAllText(saveFileDialog1.FileName, Out,Encoding.Default);
             }
         }
 
-        private void альтернативаToolStripMenuItem_Click(object sender, EventArgs e)
+        private void альтернативаToolStripMenuItem_Click(object sender, EventArgs e)//загрузка из файла
         {
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -263,6 +259,7 @@ namespace SisAn
                 }
                 int pos = 0;
                 dtgrdwMatrix.Rows.Clear();
+
                 for (int i = 0; i < alts.Length; i++)
                 {
                     dtgrdwMatrix.Columns.Add("z"+(i+1).ToString(), "z" + (i + 1).ToString());
@@ -329,8 +326,6 @@ namespace SisAn
                     string[] buf = str[i].Split('\t');
                     for (int j = 0; j < dtgrdwMatrix.ColumnCount; j++)
                     {
-                        //if (str[pos] == "")
-                        //    pos++;
                         dtgrdwMatrix[j, i].Value = buf[j];
                         pos++;
                         if (i == j)
@@ -354,6 +349,14 @@ namespace SisAn
         {
             lstbxAltList.Items[lstbxAltList.SelectedIndex] = lstbxAltList.SelectedItem.ToString().Substring(0, 4) +txtbxEditing.Text;
             txtbxEditing.Text = "";
+        }
+
+        private void lstbxAltList_DoubleClick(object sender, EventArgs e)
+        {
+            if (lstbxAltList.SelectedIndices.Count != 0)
+            {
+                txtbxEditing.Text = lstbxAltList.Items[lstbxAltList.SelectedIndex].ToString().Substring(4);
+            }
         }
     }
 
